@@ -1,12 +1,20 @@
-import fastify from "fastify";
+import fastify from "fastify"
+import crypto from "node:crypto"
 import {knex} from "./database" 
 
 const app = fastify() //base da aplicação
 
 app.get('/hello', async () => {
-    const tables = await knex("sqlite_schema").select ('*')
+    const diet = await knex('diet').insert({
+        id: crypto.randomUUID(),
+        name: "Julia",
+        description: "Dieta para emagrecimento",
+        created_at: new Date(),
+        is_on_diet: true,
+    })
+    .returning('*') //retorna todos os dados do registro inserido
 
-    return tables
+    return diet
 })
 
 //oubir uma porta
